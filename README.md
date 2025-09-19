@@ -4,4 +4,4 @@
 4.Click File > Open<br>
 5.Navigate to the folder where you extracted the ZIP<br>
 6.Select the folder and click OK <br><br>
-Change name to your name in the text area. 
+-Pratyush Omkar

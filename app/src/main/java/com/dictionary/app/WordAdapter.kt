@@ -29,4 +29,9 @@ class WordAdapter(private var meanings: List<String>) :
         meanings = newMeanings
         notifyDataSetChanged()
     }
+
+    // Add this new method to your adapter
+    fun getTranslatedText(): String {
+        return meanings.firstOrNull() ?: ""
+    }
 }

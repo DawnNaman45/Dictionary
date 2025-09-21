@@ -11,19 +11,31 @@
         android:id="@+id/languageSpinnerLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:weightSum="2"
+        android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"> <Spinner
-        android:id="@+id/sourceLanguageSpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:spinnerMode="dropdown"
-        android:backgroundTint="?attr/colorOnSurface" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Spinner
+            android:id="@+id/sourceLanguageSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:spinnerMode="dropdown"
+            android:backgroundTint="?attr/colorOnSurface" />
+
+        <ImageButton
+            android:id="@+id/buttonSwap"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/ic_swap_horiz"
+            android:contentDescription="Swap languages"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="?attr/colorOnPrimary" />
 
         <Spinner
             android:id="@+id/targetLanguageSpinner"

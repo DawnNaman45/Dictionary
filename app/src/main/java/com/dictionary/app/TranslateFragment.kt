@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.fragment.app.Fragment // This is the key change
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Firebase
@@ -20,8 +20,9 @@ import com.google.firebase.ai.type.TextPart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android.widget.ImageButton
 
-class TranslateFragment : Fragment() { // Corrected to extend Fragment
+class TranslateFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var wordAdapter: WordAdapter
@@ -29,8 +30,8 @@ class TranslateFragment : Fragment() { // Corrected to extend Fragment
     private lateinit var buttonSearch: Button
     private lateinit var sourceLanguageSpinner: Spinner
     private lateinit var targetLanguageSpinner: Spinner
+    private lateinit var buttonSwap: ImageButton // Add this line
 
-    // Use onCreateView to inflate the layout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,27 +39,22 @@ class TranslateFragment : Fragment() { // Corrected to extend Fragment
         return inflater.inflate(R.layout.fragment_translate, container, false)
     }
 
-    // Use onViewCreated to find views and set up listeners
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // The MainActivity's toolbar handles navigation, so these are no longer needed
-        // setSupportActionBar(findViewById(R.id.toolbar))
-        // supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        // supportActionBar?.title = "Translator"
 
         recyclerView = view.findViewById(R.id.recyclerView)
         editTextWord = view.findViewById(R.id.editTextWord)
         buttonSearch = view.findViewById(R.id.buttonSearch)
         sourceLanguageSpinner = view.findViewById(R.id.sourceLanguageSpinner)
         targetLanguageSpinner = view.findViewById(R.id.targetLanguageSpinner)
+        buttonSwap = view.findViewById(R.id.buttonSwap) // Initialize the button
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         wordAdapter = WordAdapter(emptyList())
         recyclerView.adapter = wordAdapter
 
         val languages = getSupportedLanguages()
-        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, languages)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, languages)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sourceLanguageSpinner.adapter = adapter
         targetLanguageSpinner.adapter = adapter
@@ -73,13 +69,39 @@ class TranslateFragment : Fragment() { // Corrected to extend Fragment
                 Toast.makeText(context, "Please enter some text", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Add the click listener for the swap button
+        buttonSwap.setOnClickListener {
+            swapLanguages()
+        }
     }
 
-    // This method is for Activities, so it is no longer needed in the Fragment
-    // override fun onSupportNavigateUp(): Boolean {
-    //     onBackPressedDispatcher.onBackPressed()
-    //     return true
-    // }
+    private fun swapLanguages() {
+        val currentSourceIndex = sourceLanguageSpinner.selectedItemPosition
+        val currentTargetIndex = targetLanguageSpinner.selectedItemPosition
+
+        // Swap the selected items in the spinners
+        sourceLanguageSpinner.setSelection(currentTargetIndex)
+        targetLanguageSpinner.setSelection(currentSourceIndex)
+
+        // Swap the text in the EditText and RecyclerView
+        val currentText = editTextWord.text.toString()
+        val translatedText = wordAdapter.getTranslatedText() // Assuming you add a method for this
+
+        editTextWord.setText(translatedText)
+        wordAdapter.updateData(listOf(currentText))
+    }
+
+    // Add this helper function to your WordAdapter
+    // This allows the fragment to get the translated text from the adapter
+    /*
+    class WordAdapter(private var data: List<String>) : RecyclerView.Adapter<...>() {
+        // ...
+        fun getTranslatedText(): String {
+            return data.firstOrNull() ?: ""
+        }
+    }
+    */
 
     private fun getSupportedLanguages(): List<String> {
         return listOf("English", "Spanish", "French", "German", "Japanese", "Chinese", "Arabic", "Hindi", "Italian")
